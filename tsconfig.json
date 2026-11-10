@@ -3,13 +3,11 @@
 	"compilerOptions": {
 		"strict": true,
 		"plugins": [{ "name": "typescript-svelte-plugin" }],
-		"types": [
-			"$app/types",
-			"node"
-		]
+		"types": ["$app/types", "node"]
 	},
 	"include": [
 		"src",
+		"tests",
 		"vite.config.ts",
 		"prettier.config.ts",
 		"eslint.config.ts",

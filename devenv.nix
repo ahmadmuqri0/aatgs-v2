@@ -10,7 +10,14 @@
     vscode-css-languageserver
     vscode-html-languageserver
     svelte-language-server
+    playwright-driver.browsers
   ];
+
+  # Nix-built browsers for Vitest browser mode; npm `playwright` must match playwright-driver's version.
+  env = {
+    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+  };
 
   languages.javascript = {
     enable = true;
