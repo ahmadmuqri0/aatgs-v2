@@ -22,6 +22,7 @@ aatgs-svelte/
 │ ├ env.ts           # env var declarations
 │ └ hooks.server.ts
 ├ static/            # static assets
+├ tests/             # vitest only here (*.svelte.test.ts → browser, *.test.ts → node)
 ├ devenv.nix         # dev shell (node, pnpm, LSPs)
 ├ drizzle.config.ts
 └ vite.config.ts     # SvelteKit config lives here (no svelte.config.js)
