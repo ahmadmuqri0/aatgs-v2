@@ -27,6 +27,8 @@
     lsp.package = pkgs.vtsls;
   };
 
+  dotenv.enable = true;
+
   enterShell = ''
     echo "node $(node --version) · pnpm $(pnpm --version)"
   '';
