@@ -36,6 +36,14 @@
 
   dotenv.enable = true;
 
+  # Delegate to lint-staged so prettier/eslint use the project's own config and ignore files.
+  git-hooks.hooks.lint-staged = {
+    enable = true;
+    entry = "pnpm exec lint-staged";
+    pass_filenames = false;
+    always_run = true;
+  };
+
   enterShell = ''
     echo "node $(node --version) · pnpm $(pnpm --version)"
   '';
