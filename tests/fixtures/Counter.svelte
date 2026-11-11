@@ -1,8 +1,8 @@
 <script lang="ts">
-	let { label = 'Count', start = 0 }: { label?: string; start?: number } = $props();
+  let { label = 'Count', start = 0 }: { label?: string; start?: number } = $props();
 
-	// svelte-ignore state_referenced_locally -- `start` is only the initial value
-	let count = $state(start);
+  // svelte-ignore state_referenced_locally -- `start` is only the initial value
+  let count = $state(start);
 </script>
 
 <p>{label}: {count}</p>

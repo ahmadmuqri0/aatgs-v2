@@ -6,9 +6,9 @@ import { getRequestEvent } from '$app/server';
 import { db } from '#lib/server/db/index.ts';
 
 export const auth = betterAuth({
-	baseURL: ORIGIN,
-	secret: BETTER_AUTH_SECRET,
-	database: drizzleAdapter(db, { provider: 'sqlite' }),
-	emailAndPassword: { enabled: true },
-	plugins: [sveltekitCookies(getRequestEvent)]
+  baseURL: ORIGIN,
+  secret: BETTER_AUTH_SECRET,
+  database: drizzleAdapter(db, { provider: 'sqlite' }),
+  emailAndPassword: { enabled: true },
+  plugins: [sveltekitCookies(getRequestEvent)]
 });
