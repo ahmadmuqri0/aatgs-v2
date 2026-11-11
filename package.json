@@ -11,7 +11,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "prepare": "svelte-kit sync || echo ''",
+    "prepare": "svelte-kit sync || echo '' && husky",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
@@ -23,6 +23,13 @@
     "db:studio": "drizzle-kit studio",
     "auth:schema": "auth generate --config src/lib/server/auth.ts --output src/lib/server/db/auth.schema.ts --yes",
     "test:unit": "vitest"
+  },
+  "lint-staged": {
+    "*.{js,ts,svelte}": [
+      "eslint --fix --no-warn-ignored",
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{json,css,md,html,yaml,yml}": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -46,7 +53,9 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.19.0",
     "globals": "^17.6.0",
+    "husky": "^9.1.7",
     "jsdom": "^31.0.0",
+    "lint-staged": "^17.6.0",
     "playwright": "1.64.1",
     "prettier": "^3.8.3",
     "prettier-plugin-svelte": "^4.1.0",
