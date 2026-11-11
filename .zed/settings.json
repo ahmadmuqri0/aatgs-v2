@@ -1,0 +1,61 @@
+{
+  "languages": {
+    "Nix": {
+      "language_servers": ["nixd", "!nil"],
+      "inlay_hints": {
+        "enabled": true
+      },
+      "formatter": {
+        "external": {
+          "command": "nixfmt"
+        }
+      }
+    },
+    "JavaScript": {
+      "language_servers": ["eslint", "vtsls"],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TypeScript": {
+      "language_servers": ["eslint", "vtsls"],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "CSS": {
+      "language_servers": ["tailwindcss-intellisense-css", "!vscode-css-language-server", "..."]
+    }
+  },
+  "lsp": {
+    "nixd": {
+      "settings": {
+        "nixd": {
+          "nixpkgs": {
+            "expr": "import <nixpkgs> { }"
+          },
+          "options": {
+            "expr": "(builtins.getFlake \"/home/muqri/Nix\").nixosConfigurations.artemis.options"
+          }
+        }
+      }
+    },
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "svelte": "html"
+        },
+        "classFunctions": ["cva", "cx"],
+        "experimental": {
+          "classRegex": [
+            "class=\"([^\"]*)\"",
+            "class='([^']*)'",
+            "class:\\s*([^\\s{]+)",
+            "\\{\\s*class:\\s*\"([^\"]*)\"",
+            "\\{\\s*class:\\s*'([^']*)'"
+          ]
+        }
+      }
+    }
+  }
+}
