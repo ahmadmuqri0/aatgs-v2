@@ -15,7 +15,7 @@ export default defineConfig(
   svelte.configs.recommended,
   prettier,
   svelte.configs.prettier,
-  globalIgnores(['tests/**', '.claude/**']),
+  globalIgnores(['tests/**', '.agents/**']),
   {
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
     rules: {
