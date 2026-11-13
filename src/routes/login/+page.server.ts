@@ -8,7 +8,7 @@ import { APIError } from 'better-auth';
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (locals.user) redirect(303, '/');
-  return { form: await superValidate(zod(loginSchema)) };
+  return { form: await superValidate(zod(loginSchema)), title: 'Login' };
 };
 
 export const actions = {

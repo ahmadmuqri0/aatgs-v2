@@ -4,12 +4,12 @@
   import * as Form from '#lib/components/ui/form/index.ts';
   import * as Alert from '#lib/components/ui/alert/index.ts';
   import { Input } from '#lib/components/ui/input/index.ts';
+  import { Button } from '#lib/components/ui/button/index.ts';
   import { Checkbox } from '#lib/components/ui/checkbox/index.ts';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters/zod4';
   import { loginSchema } from './schema.ts';
   import { CircleExclamationPointIcon, EyeIcon, EyeOffIcon } from '@lucide/svelte';
-  import Button from '#lib/components/ui/button/button.svelte';
 
   let { data } = $props();
 
