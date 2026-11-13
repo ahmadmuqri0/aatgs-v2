@@ -33,7 +33,7 @@ aatgs-svelte/
 - Brainstorm by default; write code only when asked.
 - Minimal changes, no scope creep.
 - Explain what changed and why.
-- Light checks only. No tests without permission; list test scenarios before moving on.
+- Light checks only. Tests when i ask to validate; list test scenarios before moving on.
 - User verifies and reports bugs. Fix only the reported bug, no broad audits.
 
 ## Conventions
