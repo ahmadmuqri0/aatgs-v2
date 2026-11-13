@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import Page from '../src/routes/+page.svelte';
+import Page from '../src/routes/(app)/+page.svelte';
 
 describe('/+page.svelte', () => {
   test('renders the h1 heading', async () => {
