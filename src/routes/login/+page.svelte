@@ -2,12 +2,13 @@
   import { untrack } from 'svelte';
   import * as Card from '#lib/components/ui/card/index.ts';
   import * as Form from '#lib/components/ui/form/index.ts';
+  import * as Alert from '#lib/components/ui/alert/index.ts';
   import { Input } from '#lib/components/ui/input/index.ts';
   import { Checkbox } from '#lib/components/ui/checkbox/index.ts';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters/zod4';
   import { loginSchema } from './schema.ts';
-  import { EyeIcon, EyeOffIcon } from '@lucide/svelte';
+  import { CircleExclamationPointIcon, EyeIcon, EyeOffIcon } from '@lucide/svelte';
   import Button from '#lib/components/ui/button/button.svelte';
 
   let { data } = $props();
@@ -84,7 +85,13 @@
         </Form.Field>
 
         {#if $message}
-          <p class="text-sm text-destructive">{$message}</p>
+          <Alert.Root
+            class="max-w-md border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50"
+          >
+            <CircleExclamationPointIcon />
+            <Alert.Title>Something went wrong</Alert.Title>
+            <Alert.Description>{$message}</Alert.Description>
+          </Alert.Root>
         {/if}
 
         <Form.Button class="w-full" disabled={$submitting}>Login</Form.Button>

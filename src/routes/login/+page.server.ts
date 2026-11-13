@@ -1,10 +1,10 @@
 import { redirect, type Actions } from '@sveltejs/kit';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters/zod4';
-import { APIError } from 'better-auth/api';
 import { auth } from '#lib/server/auth.ts';
 import { loginSchema } from './schema.ts';
 import type { PageServerLoad } from './$types';
+import { APIError } from 'better-auth';
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (locals.user) redirect(303, '/');
