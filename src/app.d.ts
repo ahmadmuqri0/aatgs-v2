@@ -10,6 +10,7 @@ declare global {
     }
     interface PageData {
       title?: string;
+      breadcrumbs?: { label: string; href?: import('$app/types').Path }[];
     }
 
     // interface Error {}
