@@ -12,5 +12,26 @@ export const relations = defineRelations(schema, (r) => ({
   },
   account: {
     user: r.one.user({ from: r.account.userId, to: r.user.id })
+  },
+  assignment: {
+    user: r.one.user({ from: r.assignment.userId, to: r.user.id }),
+    generations: r.many.generation({
+      from: r.assignment.id,
+      to: r.generation.assignmentId
+    }),
+    activeGeneration: r.one.generation({
+      from: r.assignment.activeGenerationId,
+      to: r.generation.id
+    })
+  },
+  generation: {
+    assignment: r.one.assignment({
+      from: r.generation.assignmentId,
+      to: r.assignment.id
+    }),
+    tasks: r.many.task({ from: r.generation.id, to: r.task.generationId })
+  },
+  task: {
+    generation: r.one.generation({ from: r.task.generationId, to: r.generation.id })
   }
 }));

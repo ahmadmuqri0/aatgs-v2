@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CommandIcon } from '@lucide/svelte';
+  import { BookOpenIcon, CommandIcon } from '@lucide/svelte';
   import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
   import NavMain from './nav-main.svelte';
   import NavUser from './nav-user.svelte';
@@ -13,7 +13,9 @@
     ...restProps
   }: ComponentProps<typeof Sidebar.Root> & { user: User } = $props();
 
-  const navItem = [] satisfies NavItem[];
+  const navItem = [
+    { title: 'Assignment', url: 'assignments', icon: BookOpenIcon }
+  ] satisfies NavItem[];
 </script>
 
 <Sidebar.Root bind:ref variant="inset" {...restProps}>
