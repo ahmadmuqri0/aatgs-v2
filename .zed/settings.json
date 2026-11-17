@@ -28,6 +28,23 @@
     }
   },
   "lsp": {
+    "vtsls": {
+      "settings": {
+        "typescript": {
+          "tsserver": {
+            "maxtsservermemory": 1536,
+            "usesyntaxserver": "never"
+          }
+        }
+      }
+    },
+    "svelte-language-server": {
+      "binary": {
+        "env": {
+          "NODE_OPTIONS": "--max-old-space-size=1024"
+        }
+      }
+    },
     "nixd": {
       "settings": {
         "nixd": {

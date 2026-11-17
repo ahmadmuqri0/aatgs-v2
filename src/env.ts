@@ -8,5 +8,8 @@ export const variables = defineEnvVars({
   BETTER_AUTH_SECRET: {
     description:
       'Secret used to sign tokens. For production use 32 characters generated with high entropy. See [Better Auth installation](https://www.better-auth.com/docs/installation).'
-  }
+  },
+  UPLOAD_DIR: { description: 'The directory for file uploads' },
+  GEMINI_API_KEY: { description: 'The api key for Gemini' },
+  GEMINI_MODEL: { description: 'The model for the generation (default gemini-3.6-flash)' }
 });
