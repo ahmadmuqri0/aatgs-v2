@@ -1,30 +1,106 @@
 {
   "languages": {
-    "Nix": {
-      "language_servers": ["nixd", "!nil"],
-      "inlay_hints": {
-        "enabled": true
-      },
-      "formatter": {
-        "external": {
-          "command": "nixfmt"
-        }
-      }
-    },
     "JavaScript": {
-      "language_servers": ["eslint", "vtsls"],
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+      "language_servers": ["oxlint", "vtsls"],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        },
+        {
+          "code_action": "source.fixAll.oxc"
+        }
+      ]
     },
     "TypeScript": {
-      "language_servers": ["eslint", "vtsls"],
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+      "language_servers": ["oxlint", "vtsls"],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
     },
     "CSS": {
-      "language_servers": ["tailwindcss-intellisense-css", "!vscode-css-language-server", "..."]
+      "language_servers": ["tailwindcss-intellisense-css", "!vscode-css-language-server", "..."],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
+    },
+    "HTML": {
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
+    },
+    "JSON": {
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
+    },
+    "JSONC": {
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
+    },
+    "Markdown": {
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
+    },
+    "YAML": {
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        }
+      ]
     }
   },
   "lsp": {
@@ -45,18 +121,6 @@
         }
       }
     },
-    "nixd": {
-      "settings": {
-        "nixd": {
-          "nixpkgs": {
-            "expr": "import <nixpkgs> { }"
-          },
-          "options": {
-            "expr": "(builtins.getFlake \"/home/muqri/Nix\").nixosConfigurations.artemis.options"
-          }
-        }
-      }
-    },
     "tailwindcss-language-server": {
       "settings": {
         "includeLanguages": {
@@ -71,6 +135,22 @@
             "\\{\\s*class:\\s*\"([^\"]*)\"",
             "\\{\\s*class:\\s*'([^']*)'"
           ]
+        }
+      }
+    },
+    "oxlint": {
+      "initialization_options": {
+        "settings": {
+          "run": "onType",
+          "fixKind": "safe_fix"
+        }
+      }
+    },
+    "oxfmt": {
+      "initialization_options": {
+        "settings": {
+          "fmt.configPath": "./vite.config.ts",
+          "run": "onSave"
         }
       }
     }

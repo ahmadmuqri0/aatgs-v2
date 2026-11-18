@@ -3,7 +3,9 @@ import type { WithElementRef } from 'svelte-toolbelt';
 import type { HTMLAttributes, HTMLInputAttributes, HTMLLabelAttributes } from 'svelte/elements';
 
 export type FileRejectedReason =
-  'Maximum file size exceeded' | 'File type not allowed' | 'Maximum files uploaded';
+  | 'Maximum file size exceeded'
+  | 'File type not allowed'
+  | 'Maximum files uploaded';
 
 export type FileDropZoneRootPropsWithoutHTML = WithChildren<{
   ref?: HTMLInputElement | null;
@@ -48,7 +50,7 @@ export type FileDropZoneRootPropsWithoutHTML = WithChildren<{
 export type FileDropZoneRootProps = FileDropZoneRootPropsWithoutHTML &
   Omit<HTMLInputAttributes, 'multiple' | 'files' | 'id' | 'class'>;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+// oxlint-disable-next-line @typescript-eslint/no-empty-object-type
 export type FileDropZoneTriggerPropsWithoutHTML = WithChildren<WithElementRef<{}>>;
 
 export type FileDropZoneTriggerProps = FileDropZoneTriggerPropsWithoutHTML &
