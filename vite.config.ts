@@ -1,4 +1,3 @@
-// vp migrate: merged .oxlintrc.json (133d084dca08d984f5f4e322d6ed4f5a).
 import { defineConfig, lazyPlugins } from 'vite-plus';
 import tailwindcss from '@tailwindcss/vite';
 import adapter from '@sveltejs/adapter-node';
@@ -28,14 +27,8 @@ export default defineConfig({
     },
     ignorePatterns: [
       '**/node_modules',
-      '**/.output',
-      '**/.vercel',
-      '**/.netlify',
-      '**/.wrangler',
       '.svelte-kit',
       'build',
-      '**/.DS_Store',
-      '**/Thumbs.db',
       '**/.env',
       '**/.env.*',
       '!**/.env.example',
@@ -43,9 +36,8 @@ export default defineConfig({
       '**/vite.config.js.timestamp-*',
       '**/vite.config.ts.timestamp-*',
       '**/*.db',
-      '**/.vitest/',
-      'tests/**',
-      '.claude/**'
+      '.claude/**',
+      'src/lib/components/ui/**'
     ],
     rules: {
       'constructor-super': 'error',
@@ -201,7 +193,6 @@ export default defineConfig({
           'no-inner-declarations': 'off',
           'no-self-assign': 'off'
         },
-        jsPlugins: ['eslint-plugin-svelte'],
         globals: {
           $state: 'readonly',
           $derived: 'readonly',
@@ -235,17 +226,7 @@ export default defineConfig({
         language: 'svelte'
       }
     ],
-    ignorePatterns: [
-      'package-lock.json',
-      'pnpm-lock.yaml',
-      'yarn.lock',
-      'bun.lock',
-      'bun.lockb',
-      '.claude/',
-      'skills-lock.json',
-      '/static/',
-      '/drizzle/'
-    ]
+    ignorePatterns: ['pnpm-lock.yaml', '.claude/', 'skills-lock.json', '/static/', '/drizzle/']
   },
   plugins: lazyPlugins(() => [
     tailwindcss(),
@@ -259,5 +240,10 @@ export default defineConfig({
       adapter: adapter(),
       experimental: { remoteFunctions: true }
     })
-  ])
+  ]),
+  test: {
+    environment: 'node',
+    include: ['tests/**/*.{test,spec}.ts'],
+    expect: { requireAssertions: true }
+  }
 });

@@ -6,7 +6,7 @@ This project is **local only** and will **not be deployed**. Do not use paid ser
 
 ## Stack
 
-SvelteKit 3 (Svelte 5 runes, remote functions) · TypeScript · Tailwind CSS 4 · Drizzle ORM + SQLite (better-sqlite3) · Better Auth · vitest · pnpm · devenv
+SvelteKit 3 (Svelte 5 runes, remote functions) · TypeScript · Tailwind CSS 4 · Drizzle ORM + SQLite (better-sqlite3) · Better Auth · vite+ · pnpm · devenv
 
 ## Project Structure
 
@@ -22,7 +22,7 @@ aatgs-svelte/
 │ ├ env.ts           # env var declarations
 │ └ hooks.server.ts
 ├ static/            # static assets
-├ tests/             # vitest only here (*.svelte.test.ts → browser, *.test.ts → node)
+├ tests/             # tests file lives here
 ├ devenv.nix         # dev shell (node, pnpm, LSPs)
 ├ drizzle.config.ts
 └ vite.config.ts     # SvelteKit config lives here (no svelte.config.js)

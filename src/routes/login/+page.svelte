@@ -1,25 +1,18 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
   import * as Card from '#lib/components/ui/card/index.ts';
-  import * as Form from '#lib/components/ui/form/index.ts';
   import * as Alert from '#lib/components/ui/alert/index.ts';
+  import * as Field from '#lib/components/ui/field/index.ts';
   import { Input } from '#lib/components/ui/input/index.ts';
   import { Button } from '#lib/components/ui/button/index.ts';
   import { Checkbox } from '#lib/components/ui/checkbox/index.ts';
-  import { superForm } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters/zod4';
-  import { loginSchema } from './schema.ts';
+  import { login } from '#lib/remotes/auth.remote.ts';
+  import { loginSchema } from '#lib/schemas/auth.ts';
   import { CircleExclamationPointIcon, EyeIcon, EyeOffIcon } from '@lucide/svelte';
-
-  let { data } = $props();
 
   let isHidden = $state(true);
 
-  const form = superForm(
-    untrack(() => data.form),
-    { validators: zodClient(loginSchema) }
-  );
-  const { form: formData, enhance, message, submitting } = form;
+  const { email, password, rememberMe } = login.fields;
+  const errors = $derived(login.fields.issues());
 </script>
 
 <div class="flex h-screen w-full items-center justify-center px-4">
@@ -29,72 +22,62 @@
       <Card.Description>Enter your email below to login to your account</Card.Description>
     </Card.Header>
 
-    <form method="POST" use:enhance>
+    <form {...login.preflight(loginSchema)}>
       <Card.Content class="flex flex-col gap-4">
-        <Form.Field {form} name="email">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Email</Form.Label>
-              <Input
-                {...props}
-                type="email"
-                placeholder="johndoe@gmail.com"
-                autocomplete="off"
-                bind:value={$formData.email}
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+        <Field.Field data-invalid={!!email.issues()}>
+          <Field.Label for="email">Email</Field.Label>
+          <Input
+            id="email"
+            placeholder="johndoe@gmail.com"
+            autocomplete="off"
+            {...email.as('email')}
+          />
+          <Field.Error errors={email.issues()} />
+        </Field.Field>
 
-        <Form.Field {form} name="password">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Password</Form.Label>
-              <div class="relative">
-                <Input
-                  {...props}
-                  type={isHidden ? 'password' : 'text'}
-                  bind:value={$formData.password}
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onclick={() => (isHidden = !isHidden)}
-                  class="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-                >
-                  {#if isHidden}
-                    <EyeIcon class="h-4 w-4" />
-                  {:else}
-                    <EyeOffIcon class="h-4 w-4" />
-                  {/if}
-                </Button>
-              </div>
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
+        <Field.Field data-invalid={!!password.issues()}>
+          <Field.Label for="password">Password</Field.Label>
+          <div class="relative">
+            <Input id="password" {...password.as(isHidden ? 'password' : 'text')} />
+            <Button
+              variant="ghost"
+              size="sm"
+              onclick={() => (isHidden = !isHidden)}
+              class="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
+            >
+              {#if isHidden}
+                <EyeIcon class="h-4 w-4" />
+              {:else}
+                <EyeOffIcon class="h-4 w-4" />
+              {/if}
+            </Button>
+          </div>
+          <Field.Error errors={password.issues()} />
+        </Field.Field>
 
-        <Form.Field {form} name="rememberMe" class="flex items-center gap-2 space-y-0">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Checkbox {...props} bind:checked={$formData.rememberMe} />
-              <Form.Label>Remember me</Form.Label>
-            {/snippet}
-          </Form.Control>
-        </Form.Field>
+        <Field.Field orientation="horizontal">
+          <Checkbox
+            id="rememberMe"
+            name={rememberMe.as('checkbox').name}
+            bind:checked={() => rememberMe.value() ?? true, (v) => rememberMe.set(v)}
+          />
+          <Field.Label for="rememberMe">Remember me</Field.Label>
+        </Field.Field>
 
-        {#if $message}
+        {#if errors?.length}
           <Alert.Root
-            class="max-w-md border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50"
+            class="max-w-md border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50"
           >
             <CircleExclamationPointIcon />
-            <Alert.Title>Something went wrong</Alert.Title>
-            <Alert.Description>{$message}</Alert.Description>
+            <Alert.Title>{errors[0].message}</Alert.Title>
           </Alert.Root>
         {/if}
-
-        <Form.Button class="w-full" disabled={$submitting}>Login</Form.Button>
+        <Field.Field>
+          <Button type="submit" class="w-full" disabled={login.pending > 0}>Login</Button>
+          <Field.Description class="text-center">
+            Don&apos;t have an account? <a href="/register">Register</a>
+          </Field.Description>
+        </Field.Field>
       </Card.Content>
     </form>
   </Card.Root>
