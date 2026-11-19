@@ -198,8 +198,8 @@ importers:
         specifier: ^3.12.4
         version: 3.12.4
       '@lucide/svelte':
-        specifier: ^1.73.0
-        version: 1.73.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))
+        specifier: ^1.74.0
+        version: 1.74.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))
       '@sveltejs/adapter-node':
         specifier: ^6.0.0
         version: 6.0.1(@sveltejs/kit@3.1.1(@sveltejs/vite-plugin-svelte@7.3.1(@voidzero-dev/vite-plus-core@8.3.8000(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.1)))(@voidzero-dev/vite-plus-core@8.3.8000(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.1))(typescript@6.0.3))
@@ -1006,8 +1006,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@lucide/svelte@1.73.0':
-    resolution: {integrity: sha512-Rz1uA9aTJ7HA/j2Hf9Dm2OVM8NtkzHnNeIQvVWoUkpf1ZD/7dR9cB4ftjbOiWAeJrKkEAVvTDrcVtITFdx6KAA==}
+  '@lucide/svelte@1.74.0':
+    resolution: {integrity: sha512-J9kteBGbntyvE+xIcpoqOcoOfuat0tFnGzOx+aj0NbydQlt5x+/ayRSwEK0iqaY3RTGavpthEx/l7PQiqT+crg==}
     peerDependencies:
       svelte: ^5
 
@@ -4097,7 +4097,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@lucide/svelte@1.73.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))':
+  '@lucide/svelte@1.74.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))':
     dependencies:
       svelte: 5.57.3(@typescript-eslint/types@8.72.1)
 

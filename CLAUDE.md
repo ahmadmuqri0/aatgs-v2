@@ -6,7 +6,7 @@ This project is **local only** and will **not be deployed**. Do not use paid ser
 
 ## Stack
 
-SvelteKit 3 (Svelte 5 runes, remote functions) · TypeScript · Tailwind CSS 4 · Drizzle ORM + SQLite (better-sqlite3) · Better Auth · vite+ · pnpm · devenv
+SvelteKit 3 (Svelte 5 runes, remote functions) · TypeScript · Tailwind CSS 4 · Drizzle ORM + SQLite (better-sqlite3) · Better Auth · vite+ · pnpm
 
 ## Project Structure
 
@@ -23,7 +23,6 @@ aatgs-svelte/
 │ └ hooks.server.ts
 ├ static/            # static assets
 ├ tests/             # tests file lives here
-├ devenv.nix         # dev shell (node, pnpm, LSPs)
 ├ drizzle.config.ts
 └ vite.config.ts     # SvelteKit config lives here (no svelte.config.js)
 ```
@@ -38,7 +37,6 @@ aatgs-svelte/
 
 ## Conventions
 
-- Work inside `devenv shell`; it loads `.env` and installs deps.
 - Import lib code with the `#lib/*` alias.
 - Declare new env vars in `src/env.ts`; server code reads them from `$app/env/private`.
 - Generated auth tables: run `pnpm auth:schema`, don't hand-edit `db/auth.schema.ts`.

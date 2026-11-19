@@ -1,7 +1,23 @@
 {
   "languages": {
+    "Svelte": {
+      "language_servers": ["svelte-language-server", "oxlint", "oxfmt", "..."],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "oxfmt"
+          }
+        },
+        {
+          "code_action": "source.fixAll.oxc"
+        }
+      ]
+    },
     "JavaScript": {
-      "language_servers": ["oxlint", "vtsls"],
+      "language_servers": ["oxlint", "oxfmt", "vtsls"],
       "prettier": {
         "allowed": false
       },
@@ -17,7 +33,7 @@
       ]
     },
     "TypeScript": {
-      "language_servers": ["oxlint", "vtsls"],
+      "language_servers": ["oxlint", "oxfmt", "vtsls"],
       "prettier": {
         "allowed": false
       },
@@ -108,8 +124,8 @@
       "settings": {
         "typescript": {
           "tsserver": {
-            "maxtsservermemory": 1536,
-            "usesyntaxserver": "never"
+            "maxTsServerMemory": 1536,
+            "useSyntaxServer": "never"
           }
         }
       }
