@@ -34,6 +34,7 @@ aatgs-svelte/
 - Explain what changed and why.
 - Light checks only. Tests when i ask to validate; list test scenarios before moving on.
 - User verifies and reports bugs. Fix only the reported bug, no broad audits.
+- Track features in `ROADMAP.md`: tick an item when it ships, add new items under their area.
 
 ## Conventions
 
