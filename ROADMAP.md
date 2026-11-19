@@ -11,6 +11,7 @@ Features grouped by area, not by time. Tick an item when it ships; add new items
 
 - [x] Sidebar layout with breadcrumbs and page titles
 - [ ] Home page dashboard (upcoming due dates, in-progress assignments)
+- [ ] Integrate event calendar
 
 ## Assignments
 
