@@ -123,6 +123,10 @@
     "vtsls": {
       "settings": {
         "typescript": {
+          "preferences": {
+            "importModuleSpecifier": "non-relative",
+            "importModuleSpecifierEnding": "ts"
+          },
           "tsserver": {
             "maxTsServerMemory": 1536,
             "useSyntaxServer": "never"
@@ -131,6 +135,16 @@
       }
     },
     "svelte-language-server": {
+      "initialization_options": {
+        "configuration": {
+          "typescript": {
+            "preferences": {
+              "importModuleSpecifier": "non-relative",
+              "importModuleSpecifierEnding": "ts"
+            }
+          }
+        }
+      },
       "binary": {
         "env": {
           "NODE_OPTIONS": "--max-old-space-size=1024"

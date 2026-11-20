@@ -1,8 +1,9 @@
-import { auth } from '#lib/server/auth.ts';
-import { loginSchema, registerSchema } from '#lib/schemas/auth.ts';
 import { form, getRequestEvent } from '$app/server';
 import { invalid, redirect } from '@sveltejs/kit';
 import { APIError } from 'better-auth';
+
+import { loginSchema, registerSchema } from '#lib/schemas/auth.ts';
+import { auth } from '#lib/server/auth.ts';
 
 export const login = form(loginSchema, async (data) => {
   try {

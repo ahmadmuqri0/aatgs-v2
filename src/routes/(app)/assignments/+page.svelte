@@ -1,13 +1,14 @@
 <script lang="ts">
-  import * as Empty from '#lib/components/ui/empty/index.ts';
-  import * as Card from '#lib/components/ui/card/index.ts';
-  import { Progress } from '#lib/components/ui/progress/index.ts';
-  import { Badge } from '#lib/components/ui/badge/index.ts';
-  import { FileTextIcon, CircleCheckIcon } from '@lucide/svelte';
-  import { getAssignments } from '#lib/remotes/assignment.remote.ts';
-  import { Spinner } from '#lib/components/ui/spinner/index.ts';
-  import CreateAssignmentDialog from '#lib/components/create-assignment-dialog.svelte';
   import { DateFormatter } from '@internationalized/date';
+  import { FileTextIcon, CircleCheckIcon } from '@lucide/svelte';
+
+  import CreateAssignmentDialog from '#lib/components/create-assignment-dialog.svelte';
+  import { Badge } from '#lib/components/ui/badge/index.ts';
+  import * as Card from '#lib/components/ui/card/index.ts';
+  import * as Empty from '#lib/components/ui/empty/index.ts';
+  import { Progress } from '#lib/components/ui/progress/index.ts';
+  import { Spinner } from '#lib/components/ui/spinner/index.ts';
+  import { getAssignments } from '#lib/remotes/assignment.remote.ts';
 
   const assignments = $derived(await getAssignments());
 

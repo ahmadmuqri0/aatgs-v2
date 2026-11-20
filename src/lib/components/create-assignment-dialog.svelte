@@ -1,13 +1,15 @@
 <script lang="ts">
+  import type { DateValue } from '@internationalized/date';
+
+  import { FileTextIcon, PlusIcon, XIcon } from '@lucide/svelte';
+
+  import DatePicker from '#lib/components/date-picker.svelte';
+  import { Button } from '#lib/components/ui/button/index.ts';
   import * as Dialog from '#lib/components/ui/dialog/index.ts';
   import * as Field from '#lib/components/ui/field/index.ts';
   import * as FileDropZone from '#lib/components/ui/file-drop-zone/index.ts';
-  import { Button } from '#lib/components/ui/button/index.ts';
   import { Input } from '#lib/components/ui/input/index.ts';
-  import { FileTextIcon, PlusIcon, XIcon } from '@lucide/svelte';
   import { createAssignment } from '#lib/remotes/assignment.remote.ts';
-  import DatePicker from './date-picker.svelte';
-  import type { DateValue } from '@internationalized/date';
   import { MAX_DOCS_SIZE } from '#lib/schemas/assignment.ts';
 
   let open = $state(false);
@@ -41,8 +43,6 @@
   }
 
   const onUpload: FileDropZone.FileDropZoneRootProps['onUpload'] = async (files) => {
-    // the drop zone still calls onUpload([]) after rejecting every file;
-    // bail so setFile(null) doesn't wipe the rejectReason that was just set
     if (files.length === 0) return;
     setFile(files[0]);
   };
@@ -79,11 +79,9 @@
         Upload your assignment brief and we&apos;ll break it into tasks.
       </Dialog.Description>
     </Dialog.Header>
-    <!-- required for file fields; remote forms throw in dev without it -->
     <form
       enctype="multipart/form-data"
       {...createAssignment.enhance(async ({ submit }) => {
-        // submit() resolves false when validation fails; keep the dialog open to show issues
         if (await submit()) open = false;
       })}
     >

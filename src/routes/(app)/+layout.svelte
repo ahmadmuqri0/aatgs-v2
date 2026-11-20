@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
+  import { page } from '$app/state';
+
   import AppSidebar from '#lib/components/app-sidebar.svelte';
-  import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
   import * as Breadcrumb from '#lib/components/ui/breadcrumb/index.ts';
   import { Separator } from '#lib/components/ui/separator/index.ts';
-  import { page } from '$app/state';
-  import { resolve } from '$app/paths';
+  import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
 
   let { data, children } = $props();
   const crumbs = $derived(page.data.breadcrumbs!);

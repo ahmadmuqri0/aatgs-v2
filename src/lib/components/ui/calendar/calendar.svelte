@@ -1,7 +1,13 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
+
   import { isEqualMonth, type DateValue } from '@internationalized/date';
   import { Calendar as CalendarPrimitive } from 'bits-ui';
+
   import { cn, type WithoutChildrenOrChild } from '#lib/utils.js';
+
+  import type { ButtonVariant } from '../button/button.svelte';
+
   import CalendarCaption from './calendar-caption.svelte';
   import CalendarCell from './calendar-cell.svelte';
   import CalendarDay from './calendar-day.svelte';
@@ -16,8 +22,6 @@
   import CalendarNav from './calendar-nav.svelte';
   import CalendarNextButton from './calendar-next-button.svelte';
   import CalendarPrevButton from './calendar-prev-button.svelte';
-  import type { ButtonVariant } from '../button/button.svelte';
-  import type { Snippet } from 'svelte';
 
   let {
     ref = $bindable(null),

@@ -1,14 +1,15 @@
-import { form, query } from '$app/server';
-import { db } from '#lib/server/db/index.ts';
-import { requireUser } from '#lib/server/session.ts';
-import { createAssignmentSchema } from '#lib/schemas/assignment.ts';
 import { UPLOAD_DIR } from '$app/env/private';
-import { assignment } from '#lib/server/db/schema/index.ts';
-import path from 'node:path';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { startGeneration } from '#lib/server/generation.ts';
-import { assignmentEvents, notifyAssignmentsChanged } from '#lib/server/events.ts';
+import { form, query } from '$app/server';
 import { on } from 'node:events';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+import { createAssignmentSchema } from '#lib/schemas/assignment.ts';
+import { db } from '#lib/server/db/index.ts';
+import { assignment } from '#lib/server/db/schema/index.ts';
+import { assignmentEvents, notifyAssignmentsChanged } from '#lib/server/events.ts';
+import { startGeneration } from '#lib/server/generation.ts';
+import { requireUser } from '#lib/server/session.ts';
 
 async function loadAssignments(userId: string) {
   const rows = await db.query.assignment.findMany({
@@ -44,8 +45,6 @@ export const getAssignments = query.live(async function* () {
   const user = requireUser();
   yield await loadAssignments(user.id);
 
-  // on() buffers events emitted while a yield is in flight; SvelteKit closes this
-  // generator when the client disconnects, which removes the listener
   for await (const [userId] of on(assignmentEvents, 'changed')) {
     if (userId === user.id) yield await loadAssignments(user.id);
   }

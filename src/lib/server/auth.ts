@@ -1,8 +1,9 @@
 import { ORIGIN, BETTER_AUTH_SECRET } from '$app/env/private';
-import { betterAuth } from 'better-auth/minimal';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { betterAuth } from 'better-auth/minimal';
+import { sveltekitCookies } from 'better-auth/svelte-kit';
+
 import { db } from '#lib/server/db/index.ts';
 import * as schema from '#lib/server/db/schema/index.ts';
 

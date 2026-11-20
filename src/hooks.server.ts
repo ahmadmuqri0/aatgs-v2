@@ -1,11 +1,13 @@
-import { sequence, type Handle, type ServerInit } from '@sveltejs/kit/hooks';
 import { building } from '$app/env';
-import { auth } from '#lib/server/auth.ts';
-import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { redirect } from '@sveltejs/kit';
-import { db } from './lib/server/db';
-import { generation } from '#lib/server/db/schema/assignment.schema.ts';
+import { sequence, type Handle, type ServerInit } from '@sveltejs/kit/hooks';
+import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { eq } from 'drizzle-orm';
+
+import { auth } from '#lib/server/auth.ts';
+import { generation } from '#lib/server/db/schema/assignment.schema.ts';
+
+import { db } from './lib/server/db';
 
 export const init: ServerInit = async () => {
   await db

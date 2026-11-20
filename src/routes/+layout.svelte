@@ -1,9 +1,11 @@
 <script lang="ts">
   import './layout.css';
-  import favicon from '#lib/assets/favicon.svg';
-  import { ModeWatcher } from 'mode-watcher';
-  import type { LayoutProps } from './$types';
   import { page } from '$app/state';
+  import { ModeWatcher } from 'mode-watcher';
+
+  import favicon from '#lib/assets/favicon.svg';
+
+  import type { LayoutProps } from './$types';
 
   let { children }: LayoutProps = $props();
 </script>

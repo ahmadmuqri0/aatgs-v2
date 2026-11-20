@@ -1,13 +1,14 @@
 <script lang="ts">
-  import * as Card from '#lib/components/ui/card/index.ts';
+  import { CircleExclamationPointIcon, EyeIcon, EyeOffIcon } from '@lucide/svelte';
+
   import * as Alert from '#lib/components/ui/alert/index.ts';
+  import { Button } from '#lib/components/ui/button/index.ts';
+  import * as Card from '#lib/components/ui/card/index.ts';
+  import { Checkbox } from '#lib/components/ui/checkbox/index.ts';
   import * as Field from '#lib/components/ui/field/index.ts';
   import { Input } from '#lib/components/ui/input/index.ts';
-  import { Button } from '#lib/components/ui/button/index.ts';
-  import { Checkbox } from '#lib/components/ui/checkbox/index.ts';
   import { register } from '#lib/remotes/auth.remote.ts';
   import { registerSchema } from '#lib/schemas/auth.ts';
-  import { CircleExclamationPointIcon, EyeIcon, EyeOffIcon } from '@lucide/svelte';
 
   let isHidden = $state(true);
   let isConfirmHidden = $state(true);

@@ -1,11 +1,13 @@
 <script lang="ts">
+  import type { User } from 'better-auth';
+
   import { ChevronsUpDownIcon, LogOutIcon, Settings2Icon } from '@lucide/svelte';
+
   import * as Avatar from '#lib/components/ui/avatar/index.ts';
   import * as DropdownMenu from '#lib/components/ui/dropdown-menu/index.ts';
   import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
   import { useSidebar } from '#lib/components/ui/sidebar/index.ts';
   import { getInitials } from '#lib/initials.ts';
-  import type { User } from 'better-auth';
   import { logout } from '#lib/remotes/auth.remote.ts';
 
   let { user }: { user: User } = $props();

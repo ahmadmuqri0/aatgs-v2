@@ -1,9 +1,10 @@
-import { GoogleGenAI } from '@google/genai';
 import { GEMINI_API_KEY, GEMINI_MODEL, UPLOAD_DIR } from '$app/env/private';
-import z from 'zod';
+import { GoogleGenAI } from '@google/genai';
+import { eq } from 'drizzle-orm';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { eq } from 'drizzle-orm';
+import z from 'zod';
+
 import { db } from '#lib/server/db/index.ts';
 import { assignment, generation, task } from '#lib/server/db/schema/index.ts';
 import { notifyAssignmentsChanged } from '#lib/server/events.ts';
@@ -101,7 +102,6 @@ export async function runGeneration(generationId: string) {
       throw new Error("The uploaded document doesn't look like an assignment brief");
     }
 
-    // better-sqlite3 transactions must be synchronous
     db.transaction((tx) => {
       tx.insert(task)
         .values(
@@ -135,7 +135,6 @@ export async function runGeneration(generationId: string) {
       .where(eq(generation.id, generationId))
       .catch((e) => console.error(`Could not mark generation ${generationId} as failed:`, e));
   } finally {
-    // push the completed/failed status to the owner's live getAssignments
     if (userId) notifyAssignmentsChanged(userId);
   }
 }

@@ -1,6 +1,6 @@
 # AATGS Roadmap
 
-Features grouped by area, not by time. Tick an item when it ships; add new items under their area. Mark work underway with _(in progress)_.
+Tick an item when it ships; add new items under their area. Mark work underway with _(in progress)_.
 
 ## Auth
 
@@ -19,7 +19,7 @@ Features grouped by area, not by time. Tick an item when it ships; add new items
 - [x] Store uploaded brief; clean up the file if the DB insert fails
 - [x] Assignments list sorted by due date, with status badges
 - [x] Task progress bar on cards (green + "Completed" badge when done)
-- [x] Live list updates via `query.live` (no polling)
+- [x] Live list updates via `query.live`
 - [ ] Assignment detail page (`assignments/[id]`)
 - [ ] Edit assignment title / due date
 - [ ] Delete assignment (and its uploaded file)

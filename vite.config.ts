@@ -1,7 +1,7 @@
-import { defineConfig, lazyPlugins } from 'vite-plus';
-import tailwindcss from '@tailwindcss/vite';
 import adapter from '@sveltejs/adapter-node';
 import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig, lazyPlugins } from 'vite-plus';
 
 export default defineConfig({
   staged: {
@@ -215,9 +215,22 @@ export default defineConfig({
     singleQuote: true,
     trailingComma: 'none',
     printWidth: 100,
-    sortPackageJson: false,
+    sortPackageJson: true,
     sortTailwindcss: {
-      stylesheet: './src/routes/layout.css'
+      stylesheet: './src/routes/layout.css',
+      functions: ['clsx', 'cn'],
+      preserveWhitespace: true
+    },
+    sortImports: {
+      groups: [
+        'type-import',
+        ['value-builtin', 'value-external'],
+        'type-internal',
+        'value-internal',
+        ['type-parent', 'type-sibling', 'type-index'],
+        ['value-parent', 'value-sibling', 'value-index'],
+        'unknown'
+      ]
     },
     svelte: {},
     associations: [

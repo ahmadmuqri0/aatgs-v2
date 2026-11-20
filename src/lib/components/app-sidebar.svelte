@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { BookOpenIcon, CommandIcon } from '@lucide/svelte';
-  import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
-  import NavMain from './nav-main.svelte';
-  import NavUser from './nav-user.svelte';
-  import type { ComponentProps } from 'svelte';
-  import type { NavItem } from '#lib/types.ts';
   import type { User } from 'better-auth';
-  import { resolve } from '$app/paths';
+  import type { ComponentProps } from 'svelte';
+
+  import { BookOpenIcon, CommandIcon } from '@lucide/svelte';
+
+  import type { NavItem } from '#lib/types.ts';
+
+  import NavMain from '#lib/components/nav-main.svelte';
+  import NavUser from '#lib/components/nav-user.svelte';
+  import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
   let {
     ref = $bindable(null),
     user,

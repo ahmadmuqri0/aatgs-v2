@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { ChevronDownIcon } from '@lucide/svelte';
   import { DateFormatter, type DateValue, getLocalTimeZone, today } from '@internationalized/date';
-  import * as Popover from '#lib/components/ui/popover/index.ts';
+  import { ChevronDownIcon } from '@lucide/svelte';
+
   import { Button } from '#lib/components/ui/button/index.ts';
   import { Calendar } from '#lib/components/ui/calendar/index.ts';
+  import * as Popover from '#lib/components/ui/popover/index.ts';
 
   interface Props {
     id: string;

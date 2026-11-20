@@ -1,8 +1,10 @@
 <script lang="ts">
-  import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
-  import type { NavItem } from '#lib/types.ts';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
+
+  import type { NavItem } from '#lib/types.ts';
+
+  import * as Sidebar from '#lib/components/ui/sidebar/index.ts';
 
   let { items }: { items: NavItem[] } = $props();
 </script>
