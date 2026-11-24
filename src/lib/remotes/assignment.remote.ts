@@ -189,7 +189,10 @@ export const retryGeneration = command(
       with: { generations: { columns: { status: true }, orderBy: { createdAt: 'desc' }, limit: 1 } }
     });
     if (!row) error(404, 'Assignment not found');
-    if (row.generations[0]?.status !== 'failed') error(409, 'Generation is not in a failed state');
+    // Used for both retry (after a failure) and regenerate (after success). The new
+    // generation only becomes active once it completes, so the current tasks stay until then.
+    // Refusing while one is pending stops double clicks from starting two generations.
+    if (row.generations[0]?.status === 'pending') error(409, 'Tasks are already being generated');
 
     await startGeneration(assignmentId, tier);
     notifyAssignmentsChanged(user.id);

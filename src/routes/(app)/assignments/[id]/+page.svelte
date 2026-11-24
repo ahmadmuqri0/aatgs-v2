@@ -7,6 +7,7 @@
   import { SvelteSet } from 'svelte/reactivity';
 
   import EditAssignmentDialog from '#lib/components/edit-assignment-dialog.svelte';
+  import RegenerateTasksDialog from '#lib/components/regenerate-tasks-dialog.svelte';
   import * as Alert from '#lib/components/ui/alert/index.ts';
   import { Badge } from '#lib/components/ui/badge/index.ts';
   import { Button } from '#lib/components/ui/button/index.ts';
@@ -81,12 +82,24 @@
       <div class="flex items-start justify-between gap-3">
         <div class="flex flex-wrap items-center gap-3">
           <h1 class="text-2xl font-semibold tracking-tight">{assignment.title}</h1>
-          {#if status === 'failed'}
+          {#if status === 'pending'}
+            <Badge variant="secondary">
+              <Spinner data-icon="inline-start" />
+              Generating...
+            </Badge>
+          {:else if status === 'failed'}
             <Badge variant="destructive">Generation failed</Badge>
           {/if}
         </div>
 
         <div class="flex shrink-0 gap-2">
+          {#if total > 0 && status !== 'pending'}
+            <RegenerateTasksDialog
+              assignmentId={assignment.id}
+              lastTier={assignment.latestGeneration?.tier ?? null}
+              {completed}
+            />
+          {/if}
           <EditAssignmentDialog {assignment} />
           <Dialog.Root bind:open={deleteOpen}>
             <Dialog.Trigger>
@@ -200,8 +213,16 @@
 
   {#if total > 0}
     <section class="flex min-h-0 flex-col overflow-hidden rounded-lg border">
-      <div class="border-b bg-muted/50 px-4 py-3 text-sm font-medium">
+      <div
+        class="flex items-center justify-between gap-2 border-b bg-muted/50 px-4 py-3 text-sm font-medium"
+      >
         {total} tasks
+        {#if status === 'pending'}
+          <span class="flex items-center gap-1.5 font-normal text-muted-foreground">
+            <Spinner />
+            Regenerating… the new list replaces this one when ready
+          </span>
+        {/if}
       </div>
       <ol class="min-h-0 flex-1 divide-y overflow-y-auto">
         {#each assignment.tasks as task (task.id)}
