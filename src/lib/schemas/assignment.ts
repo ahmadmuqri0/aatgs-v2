@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { MODEL_TIERS } from '#lib/models.ts';
+
 export const MAX_DOCS_SIZE = 10 * 1024 * 1024;
 
 function formatSize(bytes: number) {
@@ -10,6 +12,7 @@ function formatSize(bytes: number) {
 export const createAssignmentSchema = z.object({
   title: z.string().trim().min(1, 'Please enter a title'),
   dueDate: z.union([z.iso.date(), z.literal('')]),
+  model: z.enum(MODEL_TIERS, 'Please choose a model'),
   brief: z
     .instanceof(File, { message: 'Please upload the assignment brief' })
     .refine((file) => file.type === 'application/pdf', 'Only PDF files are accepted')

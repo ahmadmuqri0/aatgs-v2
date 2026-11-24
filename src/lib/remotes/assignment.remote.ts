@@ -7,11 +7,13 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import z from 'zod';
 
+import { MODEL_TIERS } from '#lib/models.ts';
 import { createAssignmentSchema } from '#lib/schemas/assignment.ts';
 import { db } from '#lib/server/db/index.ts';
 import { assignment, task } from '#lib/server/db/schema/index.ts';
 import { assignmentEvents, notifyAssignmentsChanged } from '#lib/server/events.ts';
 import { startGeneration } from '#lib/server/generation.ts';
+import { tierOf } from '#lib/server/models.ts';
 import { requireUser } from '#lib/server/session.ts';
 
 async function loadAssignments(userId: string) {
@@ -74,7 +76,7 @@ async function loadAssignment(userId: string, id: string) {
         }
       },
       generations: {
-        columns: { status: true, error: true },
+        columns: { status: true, error: true, model: true },
         orderBy: { createdAt: 'desc' },
         limit: 1
       }
@@ -85,7 +87,13 @@ async function loadAssignment(userId: string, id: string) {
   const { activeGeneration, generations, ...assignment } = row;
   return {
     ...assignment,
-    latestGeneration: generations[0] ?? null,
+    latestGeneration: generations[0]
+      ? {
+          status: generations[0].status,
+          error: generations[0].error,
+          tier: tierOf(generations[0].model)
+        }
+      : null,
     tasks: activeGeneration?.tasks ?? []
   };
 }
@@ -124,7 +132,7 @@ export const createAssignment = form(createAssignmentSchema, async (data) => {
     throw e;
   }
 
-  await startGeneration(id);
+  await startGeneration(id, data.model);
   notifyAssignmentsChanged(user.id);
 });
 
@@ -145,6 +153,25 @@ export const toggleTask = command(
       .set({ completedAt: done ? new Date() : null })
       .where(eq(task.id, taskId));
 
+    notifyAssignmentsChanged(user.id);
+  }
+);
+
+export const retryGeneration = command(
+  z.object({ assignmentId: z.string(), tier: z.enum(MODEL_TIERS) }),
+  async ({ assignmentId, tier }) => {
+    const user = requireUser();
+
+    const row = await db.query.assignment.findFirst({
+      where: { id: assignmentId, userId: user.id },
+      columns: { id: true },
+      with: { generations: { columns: { status: true }, orderBy: { createdAt: 'desc' }, limit: 1 } }
+    });
+    if (!row) error(404, 'Assignment not found');
+    // Only retry when the latest attempt failed, so double clicks can't start two generations.
+    if (row.generations[0]?.status !== 'failed') error(409, 'Generation is not in a failed state');
+
+    await startGeneration(assignmentId, tier);
     notifyAssignmentsChanged(user.id);
   }
 );

@@ -9,13 +9,17 @@
   import * as Field from '#lib/components/ui/field/index.ts';
   import * as FileDropZone from '#lib/components/ui/file-drop-zone/index.ts';
   import { Input } from '#lib/components/ui/input/index.ts';
+  import * as Select from '#lib/components/ui/select/index.ts';
+  import { DEFAULT_MODEL_TIER, MODEL_TIERS, MODEL_TIER_INFO, type ModelTier } from '#lib/models.ts';
   import { createAssignment } from '#lib/remotes/assignment.remote.ts';
   import { MAX_DOCS_SIZE } from '#lib/schemas/assignment.ts';
 
   let open = $state(false);
   let dueDateVal = $state<DateValue>();
 
-  const { title, dueDate, brief } = createAssignment.fields;
+  const { title, dueDate, model, brief } = createAssignment.fields;
+
+  let modelVal = $state<ModelTier>(DEFAULT_MODEL_TIER);
 
   let dueDateInput = $state<HTMLInputElement | null>(null);
 
@@ -54,6 +58,7 @@
   function resetForm() {
     setFile(null);
     setDueDate(undefined);
+    modelVal = DEFAULT_MODEL_TIER;
     createAssignment.element?.reset();
   }
 </script>
@@ -107,6 +112,28 @@
             value={dueDateVal?.toString() ?? ''}
           />
           <Field.Error errors={dueDate.issues()} />
+        </Field.Field>
+
+        <Field.Field data-invalid={!!model.issues()}>
+          <Field.Label for="model">Model</Field.Label>
+          <Select.Root type="single" name={model.as('select').name} bind:value={modelVal}>
+            <Select.Trigger id="model" class="w-full">
+              {MODEL_TIER_INFO[modelVal].label}
+            </Select.Trigger>
+            <Select.Content>
+              {#each MODEL_TIERS as tier (tier)}
+                <Select.Item value={tier} label={MODEL_TIER_INFO[tier].label}>
+                  <div class="flex flex-col">
+                    <span>{MODEL_TIER_INFO[tier].label}</span>
+                    <span class="text-xs text-muted-foreground">
+                      {MODEL_TIER_INFO[tier].description}
+                    </span>
+                  </div>
+                </Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+          <Field.Error errors={model.issues()} />
         </Field.Field>
 
         <Field.Field data-invalid={!!(rejectReason || brief.issues())}>

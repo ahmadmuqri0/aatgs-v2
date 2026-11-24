@@ -1,13 +1,16 @@
-import { GEMINI_API_KEY, GEMINI_MODEL, UPLOAD_DIR } from '$app/env/private';
-import { GoogleGenAI } from '@google/genai';
+import { GEMINI_API_KEY, UPLOAD_DIR } from '$app/env/private';
+import { ApiError, GoogleGenAI } from '@google/genai';
 import { eq } from 'drizzle-orm';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import z from 'zod';
 
+import type { ModelTier } from '#lib/models.ts';
+
 import { db } from '#lib/server/db/index.ts';
 import { assignment, generation, task } from '#lib/server/db/schema/index.ts';
 import { notifyAssignmentsChanged } from '#lib/server/events.ts';
+import { GEMINI_MODELS } from '#lib/server/models.ts';
 
 export const gemini = new GoogleGenAI({
   apiKey: GEMINI_API_KEY,
@@ -49,10 +52,38 @@ const SYSTEM_PROMPT = `
   - Finish with reviewing the work against the brief and submitting it as the brief instructs.
   - If the document is not an assignment brief, return an empty task list.`;
 
-export async function startGeneration(assignmentId: string) {
+function isOverloaded(error: unknown) {
+  return error instanceof ApiError && error.status === 503;
+}
+
+async function generateTasks(model: string, brief: { mimeType: string; data: string }) {
+  const res = await gemini.models.generateContent({
+    model,
+    contents: [
+      {
+        role: 'user',
+        parts: [
+          { inlineData: brief },
+          { text: 'Generate the task list for this assignment brief.' }
+        ]
+      }
+    ],
+    config: {
+      systemInstruction: SYSTEM_PROMPT,
+      responseMimeType: 'application/json',
+      responseJsonSchema: z.toJSONSchema(generatedTasksSchema)
+    }
+  });
+
+  if (!res.text) throw new Error('Gemini returned an empty response');
+
+  return generatedTasksSchema.parse(JSON.parse(res.text)).tasks;
+}
+
+export async function startGeneration(assignmentId: string, tier: ModelTier) {
   const [row] = await db
     .insert(generation)
-    .values({ assignmentId, model: GEMINI_MODEL })
+    .values({ assignmentId, model: GEMINI_MODELS[tier] })
     .returning({ id: generation.id });
 
   void runGeneration(row.id);
@@ -73,30 +104,11 @@ export async function runGeneration(generationId: string) {
     userId = gen.assignment.userId;
 
     const file = await readFile(path.join(UPLOAD_DIR, gen.assignment.fileKey));
+    const brief = { mimeType: gen.assignment.fileMimeType, data: file.toString('base64') };
 
-    const res = await gemini.models.generateContent({
-      model: gen.model,
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            {
-              inlineData: { mimeType: gen.assignment.fileMimeType, data: file.toString('base64') }
-            },
-            { text: 'Generate the task list for this assignment brief.' }
-          ]
-        }
-      ],
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-        responseMimeType: 'application/json',
-        responseJsonSchema: z.toJSONSchema(generatedTasksSchema)
-      }
-    });
-
-    if (!res.text) throw new Error('Gemini returned an empty response');
-
-    const { tasks } = generatedTasksSchema.parse(JSON.parse(res.text));
+    // The SDK already retries 503s with backoff (see retryOptions). If it still fails,
+    // the user can retry with a different model tier.
+    const tasks = await generateTasks(gen.model, brief);
 
     if (tasks.length === 0) {
       throw new Error("The uploaded document doesn't look like an assignment brief");
@@ -130,7 +142,11 @@ export async function runGeneration(generationId: string) {
       .update(generation)
       .set({
         status: 'failed',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: isOverloaded(error)
+          ? 'Gemini is under high demand right now. Try again in a few minutes, or retry with a different model.'
+          : error instanceof Error
+            ? error.message
+            : 'Unknown error'
       })
       .where(eq(generation.id, generationId))
       .catch((e) => console.error(`Could not mark generation ${generationId} as failed:`, e));

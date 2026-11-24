@@ -27,12 +27,13 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 
 ## Generation
 
-- [x] Background task generation with Gemini (model via `GEMINI_MODEL`)
+- [x] Background task generation with Gemini
 - [x] Structured output validated with zod; rejects non-assignment docs
 - [x] Generation history with pending / completed / failed status
-- [ ] Retry a failed generation (`retryGeneration`)
+- [x] Retry a failed generation (`retryGeneration`)
 - [ ] Regenerate tasks (new generation becomes active)
-- [ ] Handle Gemini 503 "high demand" (retry or fallback model)
+- [x] Handle Gemini 503 "high demand" (SDK backoff, friendly error, retry with another model)
+- [x] Choose model tier (Lite / Fast / Smart) when creating and retrying; Gemini names stay server-side
 - [ ] Recover generations stuck in `pending` after a server restart
 
 ## Tasks
