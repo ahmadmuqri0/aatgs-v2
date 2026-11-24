@@ -34,7 +34,7 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 - [ ] Regenerate tasks (new generation becomes active)
 - [x] Handle Gemini 503 "high demand" (SDK backoff, friendly error, retry with another model)
 - [x] Choose model tier (Lite / Fast / Smart) when creating and retrying; Gemini names stay server-side
-- [ ] Recover generations stuck in `pending` after a server restart
+- [x] Recover generations stuck in `pending` after a server restart (marked failed on startup, then Retry)
 
 ## Tasks
 
