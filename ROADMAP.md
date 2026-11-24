@@ -23,7 +23,7 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 - [x] Assignment detail page (`assignments/[id]`)
 - [x] Edit assignment title / due date
 - [x] Delete assignment (and its uploaded file)
-- [ ] View the original brief PDF
+- [x] View the original brief PDF
 
 ## Generation
 

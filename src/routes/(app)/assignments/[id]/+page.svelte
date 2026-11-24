@@ -125,10 +125,16 @@
           <CalendarIcon class="size-4" />
           {assignment.dueDate ? `Due ${df.format(assignment.dueDate)}` : 'No due date'}
         </span>
-        <span class="flex min-w-0 items-center gap-1.5">
+        <a
+          href={resolve('/(app)/assignments/[id]/brief', { id: assignment.id })}
+          target="_blank"
+          rel="noopener"
+          title="Open the original brief"
+          class="flex min-w-0 items-center gap-1.5 underline-offset-4 hover:text-foreground hover:underline"
+        >
           <FileTextIcon class="size-4 shrink-0" />
           <span class="truncate">{assignment.fileName}</span>
-        </span>
+        </a>
       </div>
     </div>
 
