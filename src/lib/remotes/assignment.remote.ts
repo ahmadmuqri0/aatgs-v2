@@ -1,8 +1,10 @@
 import { UPLOAD_DIR } from '$app/env/private';
 import { form, query } from '$app/server';
+import { error } from '@sveltejs/kit';
 import { on } from 'node:events';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import z from 'zod';
 
 import { createAssignmentSchema } from '#lib/schemas/assignment.ts';
 import { db } from '#lib/server/db/index.ts';
@@ -47,6 +49,52 @@ export const getAssignments = query.live(async function* () {
 
   for await (const [userId] of on(assignmentEvents, 'changed')) {
     if (userId === user.id) yield await loadAssignments(user.id);
+  }
+});
+
+async function loadAssignment(userId: string, id: string) {
+  const row = await db.query.assignment.findFirst({
+    where: { id, userId },
+    columns: { id: true, title: true, dueDate: true, fileName: true, createdAt: true },
+    with: {
+      activeGeneration: {
+        columns: { id: true },
+        with: {
+          tasks: {
+            columns: {
+              id: true,
+              position: true,
+              title: true,
+              description: true,
+              completedAt: true
+            },
+            orderBy: { position: 'asc' }
+          }
+        }
+      },
+      generations: {
+        columns: { status: true, error: true },
+        orderBy: { createdAt: 'desc' },
+        limit: 1
+      }
+    }
+  });
+  if (!row) error(404, 'Assignment not found');
+
+  const { activeGeneration, generations, ...assignment } = row;
+  return {
+    ...assignment,
+    latestGeneration: generations[0] ?? null,
+    tasks: activeGeneration?.tasks ?? []
+  };
+}
+
+export const getAssignment = query.live(z.string(), async function* (id) {
+  const user = requireUser();
+  yield await loadAssignment(user.id, id);
+
+  for await (const [userId] of on(assignmentEvents, 'changed')) {
+    if (userId === user.id) yield await loadAssignment(user.id, id);
   }
 });
 

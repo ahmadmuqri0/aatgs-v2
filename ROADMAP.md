@@ -20,7 +20,7 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 - [x] Assignments list sorted by due date, with status badges
 - [x] Task progress bar on cards (green + "Completed" badge when done)
 - [x] Live list updates via `query.live`
-- [ ] Assignment detail page (`assignments/[id]`)
+- [x] Assignment detail page (`assignments/[id]`)
 - [ ] Edit assignment title / due date
 - [ ] Delete assignment (and its uploaded file)
 - [ ] View the original brief PDF
@@ -37,9 +37,9 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 
 ## Tasks
 
-- [ ] Task list on the detail page
+- [x] Task list on the detail page
 - [ ] Check tasks off (`toggleTask`, must call `notifyAssignmentsChanged`)
-- [ ] Progress bar on the detail page
+- [x] Progress bar on the detail page
 
 ## Dev tooling
 
