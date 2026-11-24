@@ -1,6 +1,7 @@
 import { UPLOAD_DIR } from '$app/env/private';
-import { form, query } from '$app/server';
+import { command, form, query } from '$app/server';
 import { error } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import { on } from 'node:events';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -8,7 +9,7 @@ import z from 'zod';
 
 import { createAssignmentSchema } from '#lib/schemas/assignment.ts';
 import { db } from '#lib/server/db/index.ts';
-import { assignment } from '#lib/server/db/schema/index.ts';
+import { assignment, task } from '#lib/server/db/schema/index.ts';
 import { assignmentEvents, notifyAssignmentsChanged } from '#lib/server/events.ts';
 import { startGeneration } from '#lib/server/generation.ts';
 import { requireUser } from '#lib/server/session.ts';
@@ -126,3 +127,24 @@ export const createAssignment = form(createAssignmentSchema, async (data) => {
   await startGeneration(id);
   notifyAssignmentsChanged(user.id);
 });
+
+export const toggleTask = command(
+  z.object({ taskId: z.string(), done: z.boolean() }),
+  async ({ taskId, done }) => {
+    const user = requireUser();
+
+    const row = await db.query.task.findFirst({
+      where: { id: taskId },
+      columns: { id: true },
+      with: { generation: { with: { assignment: { columns: { userId: true } } } } }
+    });
+    if (row?.generation?.assignment?.userId !== user.id) error(404, 'Task not found');
+
+    await db
+      .update(task)
+      .set({ completedAt: done ? new Date() : null })
+      .where(eq(task.id, taskId));
+
+    notifyAssignmentsChanged(user.id);
+  }
+);

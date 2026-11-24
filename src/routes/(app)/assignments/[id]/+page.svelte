@@ -1,14 +1,16 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { DateFormatter } from '@internationalized/date';
-  import { CalendarIcon, CircleCheckIcon, CircleIcon, FileTextIcon } from '@lucide/svelte';
+  import { CalendarIcon, FileTextIcon } from '@lucide/svelte';
+  import { SvelteSet } from 'svelte/reactivity';
 
   import * as Alert from '#lib/components/ui/alert/index.ts';
   import { Badge } from '#lib/components/ui/badge/index.ts';
+  import { Checkbox } from '#lib/components/ui/checkbox/index.ts';
   import * as Empty from '#lib/components/ui/empty/index.ts';
   import { Progress } from '#lib/components/ui/progress/index.ts';
   import { Spinner } from '#lib/components/ui/spinner/index.ts';
-  import { getAssignment } from '#lib/remotes/assignment.remote.ts';
+  import { getAssignment, toggleTask } from '#lib/remotes/assignment.remote.ts';
 
   const assignment = $derived(await getAssignment(page.params.id!));
   const status = $derived(assignment.latestGeneration?.status ?? null);
@@ -19,6 +21,20 @@
   const done = $derived(total > 0 && completed === total);
 
   const df = new DateFormatter('en-MY', { dateStyle: 'long' });
+
+  // Checked state always comes from the server; the live query pushes the update back.
+  const pending = new SvelteSet<string>();
+
+  async function toggle(taskId: string, done: boolean) {
+    pending.add(taskId);
+    try {
+      await toggleTask({ taskId, done });
+    } catch (e) {
+      console.error('Could not update task:', e);
+    } finally {
+      pending.delete(taskId);
+    }
+  }
 </script>
 
 <!--
@@ -84,20 +100,22 @@
       <ol class="min-h-0 flex-1 divide-y overflow-y-auto">
         {#each assignment.tasks as task (task.id)}
           <li class="flex gap-3 px-4 py-3 hover:bg-muted/30">
-            {#if task.completedAt}
-              <CircleCheckIcon
-                class="mt-0.5 size-4 shrink-0 text-green-600 dark:text-green-500"
-                aria-label="Done"
-              />
-            {:else}
-              <CircleIcon class="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-label="Open" />
-            {/if}
+            <Checkbox
+              id="task-{task.id}"
+              class="mt-1"
+              disabled={pending.has(task.id)}
+              bind:checked={() => !!task.completedAt, (done) => toggle(task.id, done)}
+            />
             <div class="flex min-w-0 flex-col gap-1">
-              <span
-                class={['font-medium', task.completedAt && 'text-muted-foreground line-through']}
+              <label
+                for="task-{task.id}"
+                class={[
+                  'cursor-pointer font-medium',
+                  task.completedAt && 'text-muted-foreground line-through'
+                ]}
               >
                 {task.title}
-              </span>
+              </label>
               {#if task.description}
                 <p class="text-sm text-muted-foreground">{task.description}</p>
               {/if}

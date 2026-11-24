@@ -38,7 +38,7 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 ## Tasks
 
 - [x] Task list on the detail page
-- [ ] Check tasks off (`toggleTask`, must call `notifyAssignmentsChanged`)
+- [x] Check tasks off (`toggleTask`, must call `notifyAssignmentsChanged`)
 - [x] Progress bar on the detail page
 
 ## Dev tooling
