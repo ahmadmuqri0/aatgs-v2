@@ -8,7 +8,7 @@ import path from 'node:path';
 import z from 'zod';
 
 import { MODEL_TIERS } from '#lib/models.ts';
-import { createAssignmentSchema } from '#lib/schemas/assignment.ts';
+import { createAssignmentSchema, updateAssignmentSchema } from '#lib/schemas/assignment.ts';
 import { db } from '#lib/server/db/index.ts';
 import { assignment, task } from '#lib/server/db/schema/index.ts';
 import { assignmentEvents, notifyAssignmentsChanged } from '#lib/server/events.ts';
@@ -138,6 +138,22 @@ export const createAssignment = form(createAssignmentSchema, async (data) => {
   }
 
   await startGeneration(id, data.model);
+  notifyAssignmentsChanged(user.id);
+});
+
+export const updateAssignment = form(updateAssignmentSchema, async (data) => {
+  const user = requireUser();
+
+  const [row] = await db
+    .update(assignment)
+    .set({
+      title: data.title,
+      dueDate: data.dueDate ? new Date(`${data.dueDate}T00:00:00`) : null
+    })
+    .where(and(eq(assignment.id, data.id), eq(assignment.userId, user.id)))
+    .returning({ id: assignment.id });
+  if (!row) error(404, 'Assignment not found');
+
   notifyAssignmentsChanged(user.id);
 });
 

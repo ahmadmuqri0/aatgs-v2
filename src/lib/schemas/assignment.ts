@@ -21,3 +21,7 @@ export const createAssignmentSchema = z.object({
       `File must be ${formatSize(MAX_DOCS_SIZE)} or smaller`
     )
 });
+
+export const updateAssignmentSchema = createAssignmentSchema
+  .pick({ title: true, dueDate: true })
+  .extend({ id: z.string().min(1) });

@@ -21,7 +21,7 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 - [x] Task progress bar on cards (green + "Completed" badge when done)
 - [x] Live list updates via `query.live`
 - [x] Assignment detail page (`assignments/[id]`)
-- [ ] Edit assignment title / due date
+- [x] Edit assignment title / due date
 - [x] Delete assignment (and its uploaded file)
 - [ ] View the original brief PDF
 

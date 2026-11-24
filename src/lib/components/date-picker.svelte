@@ -5,13 +5,15 @@
   import { Button } from '#lib/components/ui/button/index.ts';
   import { Calendar } from '#lib/components/ui/calendar/index.ts';
   import * as Popover from '#lib/components/ui/popover/index.ts';
+  import { cn } from '#lib/utils.ts';
 
   interface Props {
     id: string;
     value?: DateValue;
+    class?: string;
   }
 
-  let { id, value = $bindable() }: Props = $props();
+  let { id, value = $bindable(), class: className }: Props = $props();
   let open = $state(false);
 
   const df = new DateFormatter('en-MY', {
@@ -22,7 +24,11 @@
 <Popover.Root bind:open>
   <Popover.Trigger {id}>
     {#snippet child({ props })}
-      <Button {...props} variant="outline" class="w-32 justify-between font-normal">
+      <Button
+        {...props}
+        variant="outline"
+        class={cn('w-32 justify-between font-normal', className)}
+      >
         {value ? df.format(value.toDate(getLocalTimeZone())) : 'Pick a date'}
         <ChevronDownIcon data-icon="inline-end" />
       </Button>

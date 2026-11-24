@@ -6,6 +6,7 @@
   import { CalendarIcon, ChevronDownIcon, FileTextIcon, Trash2Icon } from '@lucide/svelte';
   import { SvelteSet } from 'svelte/reactivity';
 
+  import EditAssignmentDialog from '#lib/components/edit-assignment-dialog.svelte';
   import * as Alert from '#lib/components/ui/alert/index.ts';
   import { Badge } from '#lib/components/ui/badge/index.ts';
   import { Button } from '#lib/components/ui/button/index.ts';
@@ -85,36 +86,39 @@
           {/if}
         </div>
 
-        <Dialog.Root bind:open={deleteOpen}>
-          <Dialog.Trigger>
-            {#snippet child({ props })}
-              <Button {...props} variant="destructive" size="sm" class="shrink-0">
-                <Trash2Icon data-icon="inline-start" />
-                Delete
-              </Button>
-            {/snippet}
-          </Dialog.Trigger>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>Delete this assignment?</Dialog.Title>
-              <Dialog.Description>
-                "{assignment.title}", its task list and the uploaded brief will be permanently
-                deleted. This can't be undone.
-              </Dialog.Description>
-            </Dialog.Header>
-            <Dialog.Footer>
-              <Dialog.Close>
-                {#snippet child({ props })}
-                  <Button {...props} variant="outline" disabled={deleting}>Cancel</Button>
-                {/snippet}
-              </Dialog.Close>
-              <Button variant="destructive" disabled={deleting} onclick={remove}>
-                {#if deleting}<Spinner data-icon="inline-start" />{/if}
-                Delete
-              </Button>
-            </Dialog.Footer>
-          </Dialog.Content>
-        </Dialog.Root>
+        <div class="flex shrink-0 gap-2">
+          <EditAssignmentDialog {assignment} />
+          <Dialog.Root bind:open={deleteOpen}>
+            <Dialog.Trigger>
+              {#snippet child({ props })}
+                <Button {...props} variant="destructive" size="sm" class="shrink-0">
+                  <Trash2Icon data-icon="inline-start" />
+                  Delete
+                </Button>
+              {/snippet}
+            </Dialog.Trigger>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Delete this assignment?</Dialog.Title>
+                <Dialog.Description>
+                  "{assignment.title}", its task list and the uploaded brief will be permanently
+                  deleted. This can't be undone.
+                </Dialog.Description>
+              </Dialog.Header>
+              <Dialog.Footer>
+                <Dialog.Close>
+                  {#snippet child({ props })}
+                    <Button {...props} variant="outline" disabled={deleting}>Cancel</Button>
+                  {/snippet}
+                </Dialog.Close>
+                <Button variant="destructive" disabled={deleting} onclick={remove}>
+                  {#if deleting}<Spinner data-icon="inline-start" />{/if}
+                  Delete
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Root>
+        </div>
       </div>
       <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
         <span class="flex items-center gap-1.5">
