@@ -1,7 +1,7 @@
 import { UPLOAD_DIR } from '$app/env/private';
 import { command, form, query } from '$app/server';
 import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { on } from 'node:events';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -82,7 +82,7 @@ async function loadAssignment(userId: string, id: string) {
       }
     }
   });
-  if (!row) error(404, 'Assignment not found');
+  if (!row) return null;
 
   const { activeGeneration, generations, ...assignment } = row;
   return {
@@ -100,10 +100,16 @@ async function loadAssignment(userId: string, id: string) {
 
 export const getAssignment = query.live(z.string(), async function* (id) {
   const user = requireUser();
-  yield await loadAssignment(user.id, id);
+  const initial = await loadAssignment(user.id, id);
+  if (!initial) error(404, 'Assignment not found');
+  yield initial;
 
   for await (const [userId] of on(assignmentEvents, 'changed')) {
-    if (userId === user.id) yield await loadAssignment(user.id, id);
+    if (userId !== user.id) continue;
+    const next = await loadAssignment(user.id, id);
+    // Deleted while the page is open: end the stream quietly, the page navigates away.
+    if (!next) return;
+    yield next;
   }
 });
 
@@ -175,3 +181,21 @@ export const retryGeneration = command(
     notifyAssignmentsChanged(user.id);
   }
 );
+
+export const deleteAssignment = command(z.string(), async (assignmentId) => {
+  const user = requireUser();
+
+  const [row] = await db
+    .delete(assignment)
+    .where(and(eq(assignment.id, assignmentId), eq(assignment.userId, user.id)))
+    .returning({ fileKey: assignment.fileKey });
+  if (!row) error(404, 'Assignment not found');
+
+  // Generations and tasks are removed by ON DELETE CASCADE. Remove the file after the
+  // row, so a failed rm leaves an orphan file rather than an assignment without its brief.
+  await rm(path.join(UPLOAD_DIR, row.fileKey), { force: true }).catch((e) =>
+    console.error(`Could not remove file ${row.fileKey}:`, e)
+  );
+
+  notifyAssignmentsChanged(user.id);
+});

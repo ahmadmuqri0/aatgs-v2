@@ -22,7 +22,7 @@ Tick an item when it ships; add new items under their area. Mark work underway w
 - [x] Live list updates via `query.live`
 - [x] Assignment detail page (`assignments/[id]`)
 - [ ] Edit assignment title / due date
-- [ ] Delete assignment (and its uploaded file)
+- [x] Delete assignment (and its uploaded file)
 - [ ] View the original brief PDF
 
 ## Generation
