@@ -107,7 +107,6 @@ export const getAssignment = query.live(z.string(), async function* (id) {
   for await (const [userId] of on(assignmentEvents, 'changed')) {
     if (userId !== user.id) continue;
     const next = await loadAssignment(user.id, id);
-    // Deleted while the page is open: end the stream quietly, the page navigates away.
     if (!next) return;
     yield next;
   }
@@ -174,7 +173,6 @@ export const retryGeneration = command(
       with: { generations: { columns: { status: true }, orderBy: { createdAt: 'desc' }, limit: 1 } }
     });
     if (!row) error(404, 'Assignment not found');
-    // Only retry when the latest attempt failed, so double clicks can't start two generations.
     if (row.generations[0]?.status !== 'failed') error(409, 'Generation is not in a failed state');
 
     await startGeneration(assignmentId, tier);
@@ -191,8 +189,6 @@ export const deleteAssignment = command(z.string(), async (assignmentId) => {
     .returning({ fileKey: assignment.fileKey });
   if (!row) error(404, 'Assignment not found');
 
-  // Generations and tasks are removed by ON DELETE CASCADE. Remove the file after the
-  // row, so a failed rm leaves an orphan file rather than an assignment without its brief.
   await rm(path.join(UPLOAD_DIR, row.fileKey), { force: true }).catch((e) =>
     console.error(`Could not remove file ${row.fileKey}:`, e)
   );
